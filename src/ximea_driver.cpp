@@ -69,6 +69,8 @@ void ximea_driver::errorHandling(XI_RETURN ret, std::string message)
 
 void ximea_driver::applyParameters()
 {
+  std::cout <<"-------------setting parameters-------------" <<std::endl;
+ 
   setImageDataFormat(image_data_format_);
   setExposure(exposure_time_);
   setGain(gain_);
@@ -205,6 +207,8 @@ void ximea_driver::setImageDataFormat(std::string image_format)
 
 void ximea_driver::setROI(int rect_left, int rect_top, int rect_width, int rect_height)
 {
+  std::cout <<"setting ROI" <<std::endl;
+  
   XI_RETURN stat;
 
   if (!hasValidHandle())
@@ -240,17 +244,20 @@ void ximea_driver::setROI(int rect_left, int rect_top, int rect_width, int rect_
 void ximea_driver::setDownsample (int factor){
   
   XI_RETURN stat;
+  std::cout<< "set to CPU HOST binning" << std::endl;
   stat = xiSetParamInt(xiH_, XI_PRM_BINNING_SELECTOR, XI_BIN_SELECT_HOST_CPU);
   errorHandling(stat, "xiSetParamInt (XI_BIN_SELECT_HOST_CPU)");
  
   // stat = xiSetParamInt(xiH_, XI_PRM_DOWNSAMPLING_TYPE, XI_SKIPPING);
   // errorHandling(stat, "xiSetParamInt (DownSampling)");
+  std::cout<< "set downsampling factor: " << factor << std::endl;
   stat = xiSetParamInt(xiH_, XI_PRM_DOWNSAMPLING, factor);
   errorHandling(stat, "xiSetParamInt (DownSampling)");
 }
 
 void ximea_driver::setExposure(int time)
 {
+  std::cout <<"set exposure to: "<< time << std::endl;
   XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_EXPOSURE, time);
   errorHandling(stat, "xiSetParamInt (Exposure Time)");
   if (!stat)
@@ -261,18 +268,21 @@ void ximea_driver::setExposure(int time)
 
 void ximea_driver::setGain(float gain)
 {
+  std::cout<< "set gain: " << gain << std::endl;
   XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_GAIN, gain);
   errorHandling(stat, "xiSetParamInt (Gain)");
 }
 
 void ximea_driver::setAutoWb(bool auto_wb)
 {
+  std::cout<< "set auto white balance: " << auto_wb << std::endl;
   XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_AUTO_WB, auto_wb);
   errorHandling(stat, "xiSetParamInt (white balance)");
 }
 
 void ximea_driver::setAutoExposure(bool auto_exposure)
 {
+  std::cout<< "set auto exposure" << auto_exposure << std::endl;
   XI_RETURN stat = xiSetParamInt(xiH_, XI_PRM_AEAG, auto_exposure);
   errorHandling(stat, "xiSetParamInt (AutoExposure)");
 }

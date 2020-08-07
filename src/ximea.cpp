@@ -47,8 +47,11 @@ int main(int argc, char ** argv)
   while (ros::ok())   // TODO: need to robustify against replugging and cntrlc
   {
     ros::spinOnce();
+    ros::Time start_ = ros::Time::now();
     xd.clusterAcquire();
     xd.clusterPublishImageAndCamInfo();
+    ros::Time end_ = ros::Time::now();
+    std::cout << "capture time: " << (end_ - start_).toSec()*1000 << " ms"<<std::endl;
     loop.sleep();
   }
   xd.clusterEnd();

@@ -1,3 +1,15 @@
+# Modification
+- make string serial number possible
+
+ximea_driver.cpp
+- add more options: downsampling, gain ... etc
+
+ximea_ros_driver.cpp
+- set time according to timestamp
+- RAW8 encoding to "bayer_rggb8", since the image_proc process only do the debayering for the bayer format image
+
+
+
 # ximea_camera
 
 

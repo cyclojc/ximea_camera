@@ -45,8 +45,11 @@ void ximea_ros_driver::common_initialize(const ros::NodeHandle &nh)
   cam_info_pub_ = pnh_.advertise<sensor_msgs::CameraInfo>(cam_name_ + std::string("/camera_info"), 1);
 }
 
-void ximea_ros_driver::publishImage(const ros::Time & now)
+void ximea_ros_driver::publishImage()
 {
+  uint Sec = image_.tsSec;
+  uint NSec = image_.tsUSec * 1000;
+  ros_image_.header.stamp = ros::Time(Sec, NSec);
   cam_buffer_ = reinterpret_cast<char *>(image_.bp);
   cam_buffer_size_ = image_.width * image_.height * bpp_;
   ros_image_.data.resize(cam_buffer_size_);
@@ -62,19 +65,23 @@ void ximea_ros_driver::publishImage(const ros::Time & now)
   ros_cam_pub_.publish(ros_image_);
 }
 
-void ximea_ros_driver::publishCamInfo(const ros::Time &now)
+void ximea_ros_driver::publishCamInfo()
 {
-  ros_image_.header.stamp = now;
+  // std::cout<<"pub cam info "<<std::endl;
+  uint Sec = image_.tsSec;
+  uint NSec = image_.tsUSec * 1000;
+  
   cam_info_ = cam_info_manager_->getCameraInfo();
+  cam_info_.header.stamp = ros::Time(Sec, NSec);
   cam_info_.header.frame_id = frame_id_;
   cam_info_pub_.publish(cam_info_);
 }
 
 void ximea_ros_driver::publishImageAndCamInfo()
 {
-  ros::Time now = ros::Time::now();
-  publishImage(now);
-  publishCamInfo(now);
+  // ros::Time now = ros::Time::now();
+  publishImage();
+  publishCamInfo();
 }
 
 void ximea_ros_driver::setImageDataFormat(std::string image_format)
@@ -120,7 +127,7 @@ void ximea_ros_driver::setImageDataFormat(std::string image_format)
   else if (image_format == std::string("XI_RAW16"))
   {
     image_data_format = XI_RAW16;
-    encoding_ = std::string("bayer_bggr16");
+    encoding_ = std::string("mono16");
     bpp_ = 2;
   }
   else

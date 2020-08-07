@@ -119,7 +119,7 @@ void ximea_ros_cluster::clusterPublishImages()
   // TODO: might want to think as to how to multithread this
   for (int i = 0; i < cams_.size(); i  ++)
   {
-    threads_[i] = new boost::thread(&ximea_ros_driver::publishImage, &cams_[i], ros::Time::now());
+    threads_[i] = new boost::thread(&ximea_ros_driver::publishImage, &cams_[i]);
   }
   for (int i = 0; i < cams_.size(); i  ++)
   {
@@ -132,16 +132,16 @@ void ximea_ros_cluster::clusterPublishCamInfo()
 {
   for (int i = 0 ; i < cams_.size(); i ++)
   {
-    cams_[i].publishCamInfo(ros::Time::now());
+    cams_[i].publishCamInfo();
   }
 }
 
 void ximea_ros_cluster::clusterPublishImageAndCamInfo()
 {
-  ros::Time curr_time = ros::Time::now();
+
   for (int i = 0; i < cams_.size(); i  ++)
   {
-    threads_[i] = new boost::thread(&ximea_ros_driver::publishImage, &cams_[i], curr_time);
+    threads_[i] = new boost::thread(&ximea_ros_driver::publishImage, &cams_[i]);
   }
   for (int i = 0; i < cams_.size(); i  ++)
   {
@@ -150,7 +150,7 @@ void ximea_ros_cluster::clusterPublishImageAndCamInfo()
   }
   for (int i = 0 ; i < cams_.size(); i ++)
   {
-    cams_[i].publishCamInfo(curr_time);
+    cams_[i].publishCamInfo();
   }
 }
 
